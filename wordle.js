@@ -1,4 +1,5 @@
 let possible_words = data;
+let valid_guesses = guesses;
 let word_index = Math.floor(Math.random() * (possible_words.length + 1));
 let entire_word = possible_words[word_index];
 let word = Array.from(entire_word);
@@ -21,19 +22,8 @@ let currentGuess = [];
 let currentRow = 1;
 let flipDelay = 0;
 
-async function getDefinition(enteredWord) {
-  let url = `https://api.dictionaryapi.dev/api/v2/entries/en/${enteredWord}`;
-  try {
-    const response = await fetch(url);
-    return response.json();
-  } catch (error) {
-    return {};
-  }
-}
-
 async function validateWord(enteredWord) {
-  const wordDefinition = await getDefinition(enteredWord);
-  if (wordDefinition[0] && wordDefinition[0].hasOwnProperty("word")) {
+  if (valid_guesses.includes(enteredWord)) {
     return true;
   }
   return false;
@@ -82,7 +72,6 @@ async function submitGuess() {
       guessedWord += letter;
     }
 
-    // API shenanigans!!
     let valid = await validateWord(guessedWord);
     // ===============
 
@@ -91,6 +80,20 @@ async function submitGuess() {
       return;
     }
 
+    let number_of_each_letter = new Map();
+    for (let i = 1; i < 6; i++) {
+      let letter = word[i - 1];
+      if (number_of_each_letter.has(letter)) {
+        let current = number_of_each_letter.get(letter);
+        number_of_each_letter.set(letter, current+1);
+      }
+      else {
+        number_of_each_letter.set(letter, 1);
+      }
+    }
+    console.log(number_of_each_letter);
+    
+    // do the greens first to count down preferentially on exact matches
     for (let i = 1; i < 6; i++) {
       // Iterates over all the squares in a guess row
       squareID = "boardrow" + currentRow + "square" + i;
@@ -98,26 +101,42 @@ async function submitGuess() {
 
       if (squareValue == word[i - 1]) {
         // Checks if the value of the square matches the value's index in the word
+        let current_left = number_of_each_letter.get(squareValue);
+        number_of_each_letter.set(letter, current_left-1);
         to_be_animated.push({
           id: squareID,
           delay: flipDelay,
           newClass: "square correct",
         });
-      } else if (word.includes(squareValue)) {
-        // Misplaced letter
-        to_be_animated.push({
-          id: squareID,
-          delay: flipDelay,
-          newClass: "square misplaced",
-        });
-      } else {
-        to_be_animated.push({
-          id: squareID,
-          delay: flipDelay,
-          newClass: "square guessed",
-        });
       }
       flipDelay += 300;
+    }
+    flipDelay = 0;
+    for (let i = 1; i < 6; i++) {
+        // Iterates over all the squares in a guess row
+        squareID = "boardrow" + currentRow + "square" + i;
+        squareValue = document.getElementById(squareID).innerHTML;
+  
+        if (squareValue != word[i - 1]) {
+          let current_left = number_of_each_letter.get(squareValue);
+          console.log(i + " " + squareValue + " " + current_left);
+          if (word.includes(squareValue) && current_left > 0) {
+          // Misplaced letter
+            number_of_each_letter.set(squareValue, current_left-1);
+            to_be_animated.push({
+              id: squareID,
+              delay: flipDelay,
+              newClass: "square misplaced",
+            });
+          } else {
+            to_be_animated.push({
+              id: squareID,
+              delay: flipDelay,
+              newClass: "square guessed",
+            });
+          }
+        }
+        flipDelay += 300;
     }
 
     for (let i = 0; i < to_be_animated.length; i++) {

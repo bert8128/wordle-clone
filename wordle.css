@@ -3,7 +3,6 @@ body {
     background-color: #1d1d1d;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     margin: 0px;
 }
@@ -210,7 +209,7 @@ body {
     border-radius: 10px;
     animation-name: none;
     animation-timing-function: ease-in;
-    animation-duration: 0.5s;
+    animation-duration: 1.0s;
 }
 
 #alert-fake-word-text {
