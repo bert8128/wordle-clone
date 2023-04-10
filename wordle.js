@@ -91,7 +91,6 @@ async function submitGuess() {
         number_of_each_letter.set(letter, 1);
       }
     }
-    console.log(number_of_each_letter);
     
     // do the greens first to count down preferentially on exact matches
     for (let i = 1; i < 6; i++) {
