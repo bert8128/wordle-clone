@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="wordle.css">
-    <script type="text/javascript" src="wordle_words.js"></script>
+    <script src="wordle_words.js"></script>
+    <script src="wordle_words2.js"></script>
     <script src="wordle.js"></script>
     <title>Wordle Clone</title>
 </head>
@@ -15,13 +16,13 @@
     <div class="banner" id="victory-banner">
         <h2>You won Wordle!</h2>
         <p>Nice job! Do you want to play again?</p>
-        <a id="reload-button" href="index.html">Yes, of course!</a>
+        <a id="reload-button" href="wordle.html">Yes, of course!</a>
         <a id="close-button" onclick="closeBanner()">Nah, let me see my words</a>
     </div>
     <div class="banner" id="defeat-banner">
         <h2>Sorry, you lost.</h2>
         <p>Better luck next time. Try again?</p>
-        <a id="reload-button" href="index.html">Yes!</a>
+        <a id="reload-button" href="wordle.html">Yes!</a>
         <a id="close-button" onclick="closeBanner()">Nah, I'm a sore loser</a>
     </div>
     <div id="alert-answer">
@@ -112,7 +113,7 @@
         <div class="row" id="keyboardrow4">
             <div class="key" id="keyboardrow4delete" onclick="deleteLetter()">◀</div>
             <div class="key" id="keyboardrow4enter" onclick="submitGuess()">↵</div>
-            <a class="key" id="keyboardrow4reload" href="index.html">⟳</a>
+            <a class="key" id="keyboardrow4reload" href="wordle.html">⟳</a>
         </div>
     </div>
     <div class="attribution">
